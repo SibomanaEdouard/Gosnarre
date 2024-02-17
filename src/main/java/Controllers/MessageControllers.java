@@ -1,9 +1,11 @@
 package Controllers;
 
+import Models.Messages;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,6 +21,7 @@ public void init() throws ServletException {
 }
 private void createMessageTable(){
 try {
+
 
 
     PreparedStatement preparedStatement= (PreparedStatement) connection.createStatement();
@@ -37,10 +40,19 @@ try {
 }
 }
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+       HttpSession session=req.getSession();;
     String message=req.getParameter("message");
-//    String sender=
+    String sender = (String) session.getAttribute("id");
+    String receiver=req.getParameter("receiver");
+        Messages messages=new Messages();
+        messages.setMessage(message);
+        messages.setReceiver(receiver);
+        messages.setSender(sender);
     try{
-        PreparedStatement preparedStatement=connection.prepareStatement("INSERT INTO messages (message,receiver,sender)");
+        PreparedStatement preparedStatement=connection.prepareStatement("INSERT INTO messages (message,receiver,sender) VALUES (?,?,?)");
+        preparedStatement.setString(1,messages.getMessage());
+        preparedStatement.setString(2,messages.getReceiver());
+        preparedStatement.setString(3,messages.getSender());
         preparedStatement.executeUpdate();
     }catch (Exception e){
         System.out.println(e.getMessage());
