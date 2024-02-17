@@ -27,14 +27,19 @@ public class GetUsersControllers extends HttpServlet {
             PrintWriter out = response.getWriter();
             response.setContentType("text/html");
 
-            if (resultSet.next()) {
-                do {
-                    String username = resultSet.getString("username");
-                    out.println(username);
-                } while (resultSet.next());
-            } else {
-                ((PrintWriter) out).println("No Friends to chat with");
+            out.println("<html><head><title>Gosnarre</title></head><body>");
+            out.println("<h1>Welcome to GOSNARRE</h1>");
+            out.println("<ul>");
+
+            while (resultSet.next()) {
+                String username = resultSet.getString("username");
+                int userId = resultSet.getInt("id");
+                // Generate a link for each user
+                out.println("<li><a href='Message.jsp?userId=" + userId + "'>" + username + "</a></li>");
             }
+
+            out.println("</ul>");
+            out.println("</body></html>");
 
             resultSet.close();
             preparedStatement.close();
@@ -51,3 +56,4 @@ public class GetUsersControllers extends HttpServlet {
         }
     }
 }
+
