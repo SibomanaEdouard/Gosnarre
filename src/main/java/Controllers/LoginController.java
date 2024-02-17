@@ -16,6 +16,7 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         PrintWriter out = response.getWriter();
         response.setContentType("text/html");
         try {
@@ -24,12 +25,11 @@ public class LoginController extends HttpServlet {
             if (email != null && password != null) {
 
                 out.println("You logged successfully!");
-                response.sendRedirect("./Transaction.jsp");
+                response.sendRedirect(request.getContextPath() + "/users");
             } else {
                 out.println("Please provide all credentials to continue");
             }
         } catch (Exception e) {
-//            e.printStackTrace();
             System.out.println(e.getMessage());
             out.println("Sorry, something went wrong. Please try again later!");
         }
