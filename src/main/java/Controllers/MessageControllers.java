@@ -286,7 +286,7 @@ public class MessageControllers extends HttpServlet {
         while (resultSet.next()) {
             String message = resultSet.getString("message");
             int messageId = resultSet.getInt("id");
-            out.println("<li><a href='Message.jsp?userId=" + messageId + "'>" + message + "</a></li>");
+            out.println("<li><a href='Message.jsp?userId=" + ">" + message + "</a></li>");
         }
         out.println("</ul>");
     }
