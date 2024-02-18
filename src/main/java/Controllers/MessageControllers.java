@@ -205,6 +205,7 @@ public class MessageControllers extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        res.setContentType("text/html");
         String action = req.getParameter("action");
         if (action != null && !action.isEmpty()) {
             switch (action) {
@@ -255,9 +256,9 @@ public class MessageControllers extends HttpServlet {
         String sender = (String) session.getAttribute("id");
         String receiver = req.getParameter("receiver");
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT message FROM messages WHERE sender= ?  AND receiver= ?");
-            preparedStatement.setString(1, sender);
-            preparedStatement.setString(2, receiver);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, message FROM messages WHERE sender= ?  AND receiver= ?");
+            preparedStatement.setString(2, sender);
+            preparedStatement.setString(1, receiver);
             ResultSet resultSet = preparedStatement.executeQuery();
             displayMessages(out, resultSet);
         } catch (SQLException e) {
@@ -271,9 +272,9 @@ public class MessageControllers extends HttpServlet {
         String sender = (String) session.getAttribute("id");
         String receiver = req.getParameter("receiver");
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT message FROM messages WHERE sender= ?  AND receiver= ?");
-            preparedStatement.setString(1, receiver);
-            preparedStatement.setString(2, sender);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id ,message FROM messages WHERE sender= ?  AND receiver= ?");
+            preparedStatement.setString(2, receiver);
+            preparedStatement.setString(1, sender);
             ResultSet resultSet = preparedStatement.executeQuery();
             displayMessages(out, resultSet);
         } catch (SQLException e) {
@@ -282,12 +283,12 @@ public class MessageControllers extends HttpServlet {
     }
 
     private void displayMessages(PrintWriter out, ResultSet resultSet) throws SQLException {
-        out.println("<ul>");
         while (resultSet.next()) {
             String message = resultSet.getString("message");
-            int messageId = resultSet.getInt("id");
-            out.println("<li><a href='Message.jsp?userId=" + ">" + message + "</a></li>");
+            // Remove the points at the start of the message
+            message = message.trim(); // Trim any leading or trailing whitespace
+            out.println("<div style='background-color: grey; padding: 10px; border: 1px solid black; border-radius: 10px; margin-top: 10px; margin-bottom: 10px; width:50%'>" + message + "</div>");
         }
-        out.println("</ul>");
     }
+
 }
